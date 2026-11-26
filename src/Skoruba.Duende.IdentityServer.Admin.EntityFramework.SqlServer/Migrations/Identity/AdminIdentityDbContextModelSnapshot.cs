@@ -17,7 +17,7 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.SqlServer.Migratio
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.10")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -146,6 +146,9 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.SqlServer.Migratio
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RoleId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -169,6 +172,9 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.SqlServer.Migratio
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")

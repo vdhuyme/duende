@@ -103,7 +103,14 @@ export const formSchema = z.object({
     .array(z.object({ id: z.number(), key: z.string(), value: z.string() }))
     .optional(),
   claims: z
-    .array(z.object({ id: z.number(), key: z.string(), value: z.string() }))
+    .array(
+      z.object({
+        id: z.number(),
+        key: z.string(),
+        value: z.string(),
+        description: z.string().optional(),
+      })
+    )
     .optional(),
 });
 
@@ -302,6 +309,7 @@ export const mapEditClientToFormData = (
         id: claim.id,
         key: claim.type!,
         value: claim.value!,
+        description: claim.description,
       })) ?? clientDefaultValues.claims,
   };
 };
@@ -393,6 +401,7 @@ export const mapFormDataToCreateClient = (
             id: claim.id,
             value: claim.value,
             type: claim.key,
+            description: claim.description,
           }),
       ) ?? [],
     properties:
@@ -504,6 +513,7 @@ export const mapFormDataToEditClient = (
             id: claim.id,
             value: claim.value,
             type: claim.key,
+            description: claim.description,
           }),
       ) ?? [],
     properties:

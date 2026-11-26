@@ -867,6 +867,7 @@ export declare class ClientClaimApiDto implements IClientClaimApiDto {
     id: number;
     type: string;
     value: string;
+    description: string | undefined;
     constructor(data?: IClientClaimApiDto);
     init(_data?: any): void;
     static fromJS(data: any): ClientClaimApiDto;
@@ -876,6 +877,7 @@ export interface IClientClaimApiDto {
     id: number;
     type: string;
     value: string;
+    description: string | undefined;
 }
 export declare class ClientPropertyApiDto implements IClientPropertyApiDto {
     id: number;
@@ -1711,6 +1713,7 @@ export declare class RoleClaimApiDtoOfString implements IRoleClaimApiDtoOfString
     roleId: string | undefined;
     claimType: string;
     claimValue: string;
+    description: string | undefined;
     constructor(data?: IRoleClaimApiDtoOfString);
     init(_data?: any): void;
     static fromJS(data: any): RoleClaimApiDtoOfString;
@@ -1721,12 +1724,14 @@ export interface IRoleClaimApiDtoOfString {
     roleId: string | undefined;
     claimType: string;
     claimValue: string;
+    description: string | undefined;
 }
 export declare class RoleClaimApiDto_1 implements IRoleClaimApiDto_1 {
     claimId: number;
     roleId: TKey | undefined;
     claimType: string;
     claimValue: string;
+    description: string | undefined;
     constructor(data?: IRoleClaimApiDto_1);
     init(_data?: any): void;
     static fromJS(data: any): RoleClaimApiDto_1;
@@ -1737,6 +1742,7 @@ export interface IRoleClaimApiDto_1 {
     roleId: TKey | undefined;
     claimType: string;
     claimValue: string;
+    description: string | undefined;
 }
 export declare class TKey implements ITKey {
     constructor(data?: ITKey);
@@ -1791,6 +1797,7 @@ export declare class UserClaimApiDtoOfString implements IUserClaimApiDtoOfString
     userId: string | undefined;
     claimType: string;
     claimValue: string;
+    description: string | undefined;
     constructor(data?: IUserClaimApiDtoOfString);
     init(_data?: any): void;
     static fromJS(data: any): UserClaimApiDtoOfString;
@@ -1801,6 +1808,7 @@ export interface IUserClaimApiDtoOfString {
     userId: string | undefined;
     claimType: string;
     claimValue: string;
+    description: string | undefined;
 }
 export declare class UserProvidersApiDtoOfString implements IUserProvidersApiDtoOfString {
     providers: UserProviderApiDtoOfString[] | undefined;

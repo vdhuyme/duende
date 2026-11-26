@@ -18,7 +18,7 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.PostgreSQL.Migrati
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.10")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -496,6 +496,11 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.PostgreSQL.Migrati
                     b.Property<int>("ClientId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("character varying(21)");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(250)
@@ -512,6 +517,10 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.PostgreSQL.Migrati
                         .IsUnique();
 
                     b.ToTable("ClientClaims", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("ClientClaim");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientCorsOrigin", b =>
@@ -1146,6 +1155,16 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.PostgreSQL.Migrati
                         .IsUnique();
 
                     b.ToTable("SamlSingleLogoutServices", (string)null);
+                });
+
+            modelBuilder.Entity("Skoruba.Duende.IdentityServer.Admin.EntityFramework.Shared.Entities.Configuration.AdminClientClaim", b =>
+                {
+                    b.HasBaseType("Duende.IdentityServer.EntityFramework.Entities.ClientClaim");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.HasDiscriminator().HasValue("AdminClientClaim");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceClaim", b =>

@@ -25,6 +25,11 @@ namespace Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Dtos.Configuration
 	    [Required]
         public string Value { get; set; }
 
+        /// <summary>
+        /// Optional human-readable description explaining what this claim is for.
+        /// </summary>
+        public string Description { get; set; }
+
 		public List<ClientClaimDto> ClientClaims { get; set; }
 
 		public int TotalCount { get; set; }

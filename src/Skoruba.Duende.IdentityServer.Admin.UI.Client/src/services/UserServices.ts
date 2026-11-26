@@ -95,13 +95,22 @@ export const useAddUserClaim = (userId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ key, value }: { key: string; value: string }) => {
+    mutationFn: async ({
+      key,
+      value,
+      description,
+    }: {
+      key: string;
+      value: string;
+      description?: string;
+    }) => {
       const usersClient = getClient();
       const dto = new client.UserClaimApiDtoOfString({
         claimId: 0,
         userId,
         claimType: key,
         claimValue: value,
+        description,
       });
       return await usersClient.postUserClaims(dto);
     },

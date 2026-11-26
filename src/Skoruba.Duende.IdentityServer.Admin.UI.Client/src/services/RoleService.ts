@@ -90,7 +90,11 @@ export const useRoleClaims = (
 export const useAddRoleClaim = (roleId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: { key: string; value: string }) => {
+    mutationFn: async (input: {
+      key: string;
+      value: string;
+      description?: string;
+    }) => {
       const rolesClient = new client.RolesClient(ApiHelper.getApiBaseUrl());
       await rolesClient.postRoleClaims(
         new client.RoleClaimApiDtoOfString({
@@ -98,6 +102,7 @@ export const useAddRoleClaim = (roleId: string) => {
           roleId,
           claimType: input.key,
           claimValue: input.value,
+          description: input.description,
         }),
       );
     },

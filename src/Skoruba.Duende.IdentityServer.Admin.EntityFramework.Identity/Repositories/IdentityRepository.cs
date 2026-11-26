@@ -302,7 +302,17 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.Identity.Repositor
         public virtual async Task<IdentityResult> CreateUserClaimsAsync(TUserClaim claims)
         {
             var user = await UserManager.FindByIdAsync(claims.UserId.ToString());
-            return await UserManager.AddClaimAsync(user, new Claim(claims.ClaimType, claims.ClaimValue));
+            if (user == null)
+            {
+                return IdentityResult.Failed(IdentityRepositoryErrors.UserDoesNotExist(claims.UserId));
+            }
+
+            // Add the claim entity directly so the optional Description is persisted.
+            // UserManager.AddClaimAsync would create a new claim row without it.
+            await DbContext.Set<TUserClaim>().AddAsync(claims);
+            await AutoSaveChangesAsync();
+
+            return IdentityResult.Success;
         }
 
         public virtual async Task<IdentityResult> UpdateUserClaimsAsync(TUserClaim claims)
@@ -321,15 +331,32 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.Identity.Repositor
                 return IdentityResult.Failed(IdentityRepositoryErrors.UserClaimDoesNotExist(claims.Id));
             }
 
-            await UserManager.RemoveClaimAsync(user, new Claim(userClaim.ClaimType, userClaim.ClaimValue));
+            // Update in place so Description is preserved (and the claim id stays stable).
+            userClaim.ClaimType = claims.ClaimType;
+            userClaim.ClaimValue = claims.ClaimValue;
+            if (claims is IDescribableClaim sourceClaim && userClaim is IDescribableClaim targetClaim)
+            {
+                targetClaim.Description = sourceClaim.Description;
+            }
+            await AutoSaveChangesAsync();
 
-            return await UserManager.AddClaimAsync(user, new Claim(claims.ClaimType, claims.ClaimValue));
+            return IdentityResult.Success;
         }
 
         public virtual async Task<IdentityResult> CreateRoleClaimsAsync(TRoleClaim claims)
         {
             var role = await RoleManager.FindByIdAsync(claims.RoleId.ToString());
-            return await RoleManager.AddClaimAsync(role, new Claim(claims.ClaimType, claims.ClaimValue));
+            if (role == null)
+            {
+                return IdentityResult.Failed(IdentityRepositoryErrors.RoleDoesNotExist(claims.RoleId));
+            }
+
+            // Add the claim entity directly so the optional Description is persisted.
+            // RoleManager.AddClaimAsync would create a new claim row without it.
+            await DbContext.Set<TRoleClaim>().AddAsync(claims);
+            await AutoSaveChangesAsync();
+
+            return IdentityResult.Success;
         }
 
         public virtual async Task<IdentityResult> UpdateRoleClaimsAsync(TRoleClaim claims)
@@ -348,9 +375,16 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.Identity.Repositor
                 return IdentityResult.Failed(IdentityRepositoryErrors.RoleClaimDoesNotExist(claims.Id));
             }
 
-            await RoleManager.RemoveClaimAsync(role, new Claim(roleClaim.ClaimType, roleClaim.ClaimValue));
+            // Update in place so Description is preserved (and the claim id stays stable).
+            roleClaim.ClaimType = claims.ClaimType;
+            roleClaim.ClaimValue = claims.ClaimValue;
+            if (claims is IDescribableClaim sourceClaim && roleClaim is IDescribableClaim targetClaim)
+            {
+                targetClaim.Description = sourceClaim.Description;
+            }
+            await AutoSaveChangesAsync();
 
-            return await RoleManager.AddClaimAsync(role, new Claim(claims.ClaimType, claims.ClaimValue));
+            return IdentityResult.Success;
         }
 
 

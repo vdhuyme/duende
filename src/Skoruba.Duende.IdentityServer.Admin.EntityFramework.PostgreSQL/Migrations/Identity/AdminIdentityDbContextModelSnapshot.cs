@@ -17,7 +17,7 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.PostgreSQL.Migrati
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.10")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -144,6 +144,9 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.PostgreSQL.Migrati
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("RoleId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -167,6 +170,9 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.PostgreSQL.Migrati
                         .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")

@@ -36,7 +36,11 @@ const UserClaimsTab: React.FC<Props> = ({ userId }) => {
   const addMutation = useAddUserClaim(userId);
   const deleteMutation = useDeleteUserClaim(userId);
 
-  const handleAddClaim = (input: { key: string; value: string }) => {
+  const handleAddClaim = (input: {
+    key: string;
+    value: string;
+    description?: string;
+  }) => {
     addMutation.mutate(input, {
       onSuccess: () => {
         toast({
@@ -78,6 +82,12 @@ const UserClaimsTab: React.FC<Props> = ({ userId }) => {
       header: t("Claim.Value"),
     },
     {
+      accessorKey: "description",
+      header: t("Claim.Description"),
+      cell: ({ row }: { row: { original: { description?: string } } }) =>
+        row.original.description || "—",
+    },
+    {
       id: "actions",
       cell: ({ row }: { row: { original: { claimId: number } } }) => (
         <Button
@@ -117,6 +127,7 @@ const UserClaimsTab: React.FC<Props> = ({ userId }) => {
         isOpen={isOpen}
         onClose={closeModal}
         onSubmit={handleAddClaim}
+        showDescription
       />
 
       <DeleteDialog

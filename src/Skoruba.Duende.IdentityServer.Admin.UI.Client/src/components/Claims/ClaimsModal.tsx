@@ -17,19 +17,41 @@ import Loading from "@/components/Loading/Loading";
 const newClaimSchema = z.object({
   key: z.string().min(1),
   value: z.string().min(1),
+  description: z.string().optional(),
 });
+
+export type ClaimModalData = {
+  key: string;
+  value: string;
+  description?: string;
+};
 
 type ClaimsModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { key: string; value: string }) => void;
+  onSubmit: (data: ClaimModalData) => void;
+  /** Show the optional description field (Role/Client claims). User claims keep key+value only. */
+  showDescription?: boolean;
 };
 
-const ClaimsModal = ({ isOpen, onClose, onSubmit }: ClaimsModalProps) => {
+const ClaimsModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  showDescription = false,
+}: ClaimsModalProps) => {
   const { t } = useTranslation();
 
-  const [formData, setFormData] = useState({ key: "", value: "" });
-  const [errors, setErrors] = useState<{ key?: string; value?: string }>({});
+  const [formData, setFormData] = useState({
+    key: "",
+    value: "",
+    description: "",
+  });
+  const [errors, setErrors] = useState<{
+    key?: string;
+    value?: string;
+    description?: string;
+  }>({});
 
   const standardClaims = useStandardClaims();
 
@@ -53,12 +75,17 @@ const ClaimsModal = ({ isOpen, onClose, onSubmit }: ClaimsModalProps) => {
       setErrors({
         key: validationErrors.key?.[0],
         value: validationErrors.value?.[0],
+        description: validationErrors.description?.[0],
       });
       return;
     }
 
-    onSubmit(parsed.data);
-    setFormData({ key: "", value: "" });
+    onSubmit({
+      key: parsed.data.key,
+      value: parsed.data.value,
+      description: parsed.data.description?.trim() || undefined,
+    });
+    setFormData({ key: "", value: "", description: "" });
     onClose();
   };
 
@@ -117,6 +144,29 @@ const ClaimsModal = ({ isOpen, onClose, onSubmit }: ClaimsModalProps) => {
               <p className="text-sm text-destructive mt-1">{errors.value}</p>
             )}
           </div>
+          {showDescription && (
+            <div>
+              <Label
+                htmlFor="description"
+                className={errors.description ? "text-destructive" : ""}
+              >
+                {t("Claim.Description")}
+              </Label>
+              <Input
+                id="description"
+                placeholder={t("Claim.EnterDescriptionPlaceholder")}
+                value={formData.description}
+                autoComplete="off"
+                onChange={handleInputChange("description")}
+                className={errors.description ? "border-red-500" : ""}
+              />
+              {errors.description && (
+                <p className="text-sm text-destructive mt-1">
+                  {errors.description}
+                </p>
+              )}
+            </div>
+          )}
           <Button onClick={handleFormSubmit}>{t("Claim.Actions.Add")}</Button>
         </div>
       </DialogContent>

@@ -14,5 +14,10 @@ namespace Skoruba.Duende.IdentityServer.Admin.UI.Api.Dtos.Clients
 
         [Required]
         public string Value { get; set; }
+
+        /// <summary>
+        /// Optional human-readable description explaining what this claim is for.
+        /// </summary>
+        public string Description { get; set; }
     }
 }

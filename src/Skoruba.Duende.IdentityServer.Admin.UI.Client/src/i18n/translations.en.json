@@ -522,7 +522,9 @@
   "Claim": {
     "Key": "Claim Key",
     "Value": "Claim Value",
+    "Description": "Description",
     "EnterValuePlaceholder": "Enter value",
+    "EnterDescriptionPlaceholder": "Enter description (optional)",
     "Actions": {
       "Add": "Add Claim",
       "Added": "The claim has been added successfully",

@@ -5,6 +5,7 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Interfaces;
+using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Shared.Entities.Configuration;
 
 namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.Shared.DbContexts
 {
@@ -13,6 +14,15 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.Shared.DbContexts
         public IdentityServerConfigurationDbContext(DbContextOptions<IdentityServerConfigurationDbContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // TPH: AdminClientClaim shares the existing ClientClaims table with the
+            // Duende ClientClaim and adds an optional Description column.
+            modelBuilder.Entity<AdminClientClaim>();
         }
 
         public DbSet<ApiResourceProperty> ApiResourceProperties { get; set; }

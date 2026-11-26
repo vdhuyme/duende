@@ -5,13 +5,14 @@ import { Trash } from "lucide-react";
 import { usePaginationTable } from "@/components/DataTable/usePaginationTable";
 import useModal from "@/hooks/modalHooks";
 import { useTranslation } from "react-i18next";
-import ClaimsModal from "./ClaimsModal";
+import ClaimsModal, { ClaimModalData } from "./ClaimsModal";
 
 type FormData = {
   claims: Array<{
     id: number;
     key: string;
     value: string;
+    description?: string;
   }>;
 };
 
@@ -26,8 +27,13 @@ const ClaimsForm = () => {
 
   const { pagination, setPagination } = usePaginationTable(0, 5);
 
-  const handleAddClaim = (data: { key: string; value: string }) => {
-    append({ id: 0, key: data.key, value: data.value });
+  const handleAddClaim = (data: ClaimModalData) => {
+    append({
+      id: 0,
+      key: data.key,
+      value: data.value,
+      description: data.description,
+    });
     closeModal();
   };
 
@@ -56,6 +62,12 @@ const ClaimsForm = () => {
     {
       accessorKey: "value",
       header: t("Claim.Value"),
+    },
+    {
+      accessorKey: "description",
+      header: t("Claim.Description"),
+      cell: ({ row }: { row: { original: { description?: string } } }) =>
+        row.original.description || "—",
     },
     {
       id: "actions",
@@ -101,6 +113,7 @@ const ClaimsForm = () => {
         isOpen={isOpen}
         onClose={closeModal}
         onSubmit={handleAddClaim}
+        showDescription
       />
     </>
   );

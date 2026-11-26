@@ -99,6 +99,7 @@ const clientValidationFieldLabelKeys: Record<string, string> = {
   "properties.value": "Property.Value",
   "claims.key": "Claim.Key",
   "claims.value": "Claim.Value",
+  "claims.description": "Claim.Description",
 };
 
 const ClientEditForm = ({ clientId, client }: ClientEditFormType) => {

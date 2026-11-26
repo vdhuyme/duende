@@ -7959,6 +7959,7 @@ export class ClientClaimApiDto {
             this.id = _data["id"];
             this.type = _data["type"];
             this.value = _data["value"];
+            this.description = _data["description"];
         }
     }
     static fromJS(data) {
@@ -7972,6 +7973,7 @@ export class ClientClaimApiDto {
         data["id"] = this.id;
         data["type"] = this.type;
         data["value"] = this.value;
+        data["description"] = this.description;
         return data;
     }
 }
@@ -9718,6 +9720,7 @@ export class RoleClaimApiDtoOfString {
             this.roleId = _data["roleId"];
             this.claimType = _data["claimType"];
             this.claimValue = _data["claimValue"];
+            this.description = _data["description"];
         }
     }
     static fromJS(data) {
@@ -9732,6 +9735,7 @@ export class RoleClaimApiDtoOfString {
         data["roleId"] = this.roleId;
         data["claimType"] = this.claimType;
         data["claimValue"] = this.claimValue;
+        data["description"] = this.description;
         return data;
     }
 }
@@ -9750,6 +9754,7 @@ export class RoleClaimApiDto_1 {
             this.roleId = _data["roleId"] ? TKey.fromJS(_data["roleId"]) : undefined;
             this.claimType = _data["claimType"];
             this.claimValue = _data["claimValue"];
+            this.description = _data["description"];
         }
     }
     static fromJS(data) {
@@ -9764,6 +9769,7 @@ export class RoleClaimApiDto_1 {
         data["roleId"] = this.roleId ? this.roleId.toJSON() : undefined;
         data["claimType"] = this.claimType;
         data["claimValue"] = this.claimValue;
+        data["description"] = this.description;
         return data;
     }
 }
@@ -9908,6 +9914,7 @@ export class UserClaimApiDtoOfString {
             this.userId = _data["userId"];
             this.claimType = _data["claimType"];
             this.claimValue = _data["claimValue"];
+            this.description = _data["description"];
         }
     }
     static fromJS(data) {
@@ -9922,6 +9929,7 @@ export class UserClaimApiDtoOfString {
         data["userId"] = this.userId;
         data["claimType"] = this.claimType;
         data["claimValue"] = this.claimValue;
+        data["description"] = this.description;
         return data;
     }
 }

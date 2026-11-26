@@ -52,6 +52,7 @@ namespace Skoruba.Duende.IdentityServer.Admin.UI.Api.Mappers
             dto.UserId = source.UserId;
             dto.ClaimType = source.ClaimType;
             dto.ClaimValue = source.ClaimValue;
+            dto.Description = source.Description;
             return dto;
         }
 
@@ -103,6 +104,7 @@ namespace Skoruba.Duende.IdentityServer.Admin.UI.Api.Mappers
             dto.RoleId = source.RoleId;
             dto.ClaimType = source.ClaimType;
             dto.ClaimValue = source.ClaimValue;
+            dto.Description = source.Description;
             return dto;
         }
 
@@ -113,7 +115,8 @@ namespace Skoruba.Duende.IdentityServer.Admin.UI.Api.Mappers
                 ClaimId = source.ClaimId,
                 UserId = source.UserId,
                 ClaimType = source.ClaimType,
-                ClaimValue = source.ClaimValue
+                ClaimValue = source.ClaimValue,
+                Description = source.Description
             };
         }
 
@@ -136,7 +139,8 @@ namespace Skoruba.Duende.IdentityServer.Admin.UI.Api.Mappers
                 ClaimId = source.ClaimId,
                 RoleId = source.RoleId,
                 ClaimType = source.ClaimType,
-                ClaimValue = source.ClaimValue
+                ClaimValue = source.ClaimValue,
+                Description = source.Description
             };
         }
 

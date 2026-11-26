@@ -7,5 +7,6 @@ namespace Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Identity.Dtos.Identi
     {
         string ClaimType { get; set; }
         string ClaimValue { get; set; }
+        string Description { get; set; }
     }
 }

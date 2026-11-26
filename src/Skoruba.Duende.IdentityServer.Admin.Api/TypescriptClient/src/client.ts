@@ -8253,6 +8253,7 @@ export class ClientClaimApiDto implements IClientClaimApiDto {
     id!: number;
     type!: string;
     value!: string;
+    description!: string | undefined;
 
     constructor(data?: IClientClaimApiDto) {
         if (data) {
@@ -8268,6 +8269,7 @@ export class ClientClaimApiDto implements IClientClaimApiDto {
             this.id = _data["id"];
             this.type = _data["type"];
             this.value = _data["value"];
+            this.description = _data["description"];
         }
     }
 
@@ -8283,6 +8285,7 @@ export class ClientClaimApiDto implements IClientClaimApiDto {
         data["id"] = this.id;
         data["type"] = this.type;
         data["value"] = this.value;
+        data["description"] = this.description;
         return data;
     }
 }
@@ -8291,6 +8294,7 @@ export interface IClientClaimApiDto {
     id: number;
     type: string;
     value: string;
+    description: string | undefined;
 }
 
 export class ClientPropertyApiDto implements IClientPropertyApiDto {
@@ -10800,6 +10804,7 @@ export class RoleClaimApiDtoOfString implements IRoleClaimApiDtoOfString {
     roleId!: string | undefined;
     claimType!: string;
     claimValue!: string;
+    description!: string | undefined;
 
     constructor(data?: IRoleClaimApiDtoOfString) {
         if (data) {
@@ -10816,6 +10821,7 @@ export class RoleClaimApiDtoOfString implements IRoleClaimApiDtoOfString {
             this.roleId = _data["roleId"];
             this.claimType = _data["claimType"];
             this.claimValue = _data["claimValue"];
+            this.description = _data["description"];
         }
     }
 
@@ -10832,6 +10838,7 @@ export class RoleClaimApiDtoOfString implements IRoleClaimApiDtoOfString {
         data["roleId"] = this.roleId;
         data["claimType"] = this.claimType;
         data["claimValue"] = this.claimValue;
+        data["description"] = this.description;
         return data;
     }
 }
@@ -10841,6 +10848,7 @@ export interface IRoleClaimApiDtoOfString {
     roleId: string | undefined;
     claimType: string;
     claimValue: string;
+    description: string | undefined;
 }
 
 export class RoleClaimApiDto_1 implements IRoleClaimApiDto_1 {
@@ -10848,6 +10856,7 @@ export class RoleClaimApiDto_1 implements IRoleClaimApiDto_1 {
     roleId!: TKey | undefined;
     claimType!: string;
     claimValue!: string;
+    description!: string | undefined;
 
     constructor(data?: IRoleClaimApiDto_1) {
         if (data) {
@@ -10864,6 +10873,7 @@ export class RoleClaimApiDto_1 implements IRoleClaimApiDto_1 {
             this.roleId = _data["roleId"] ? TKey.fromJS(_data["roleId"]) : undefined as any;
             this.claimType = _data["claimType"];
             this.claimValue = _data["claimValue"];
+            this.description = _data["description"];
         }
     }
 
@@ -10880,6 +10890,7 @@ export class RoleClaimApiDto_1 implements IRoleClaimApiDto_1 {
         data["roleId"] = this.roleId ? this.roleId.toJSON() : undefined as any;
         data["claimType"] = this.claimType;
         data["claimValue"] = this.claimValue;
+        data["description"] = this.description;
         return data;
     }
 }
@@ -10889,6 +10900,7 @@ export interface IRoleClaimApiDto_1 {
     roleId: TKey | undefined;
     claimType: string;
     claimValue: string;
+    description: string | undefined;
 }
 
 export class TKey implements ITKey {
@@ -11070,6 +11082,7 @@ export class UserClaimApiDtoOfString implements IUserClaimApiDtoOfString {
     userId!: string | undefined;
     claimType!: string;
     claimValue!: string;
+    description!: string | undefined;
 
     constructor(data?: IUserClaimApiDtoOfString) {
         if (data) {
@@ -11086,6 +11099,7 @@ export class UserClaimApiDtoOfString implements IUserClaimApiDtoOfString {
             this.userId = _data["userId"];
             this.claimType = _data["claimType"];
             this.claimValue = _data["claimValue"];
+            this.description = _data["description"];
         }
     }
 
@@ -11102,6 +11116,7 @@ export class UserClaimApiDtoOfString implements IUserClaimApiDtoOfString {
         data["userId"] = this.userId;
         data["claimType"] = this.claimType;
         data["claimValue"] = this.claimValue;
+        data["description"] = this.description;
         return data;
     }
 }
@@ -11111,6 +11126,7 @@ export interface IUserClaimApiDtoOfString {
     userId: string | undefined;
     claimType: string;
     claimValue: string;
+    description: string | undefined;
 }
 
 export class UserProvidersApiDtoOfString implements IUserProvidersApiDtoOfString {

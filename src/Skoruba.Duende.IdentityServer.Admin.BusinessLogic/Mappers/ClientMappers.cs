@@ -9,6 +9,7 @@ using Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Dtos.Configuration;
 using Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Mappers.Converters;
 using Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Shared.Dtos.Common;
 using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Extensions.Common;
+using Skoruba.Duende.IdentityServer.Admin.EntityFramework.Shared.Entities.Configuration;
 using DPoPTokenExpirationValidationMode = Duende.IdentityServer.Models.DPoPTokenExpirationValidationMode;
 
 namespace Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Mappers
@@ -28,22 +29,68 @@ namespace Skoruba.Duende.IdentityServer.Admin.BusinessLogic.Mappers
         public static partial ClientSecretDto ToClientSecretDto(ClientSecret source);
         public static partial ClientSecret ToClientSecret(ClientSecretDto source);
 
-        [MapProperty(nameof(ClientClaim.Id), nameof(ClientClaimsDto.ClientClaimId))]
-        public static partial ClientClaimsDto ToClientClaimsDto(ClientClaim source);
+        /// <summary>
+        /// Maps a single claim row DTO used by claim CRUD endpoints and preserves the original claim identifier.
+        /// Reads Description from <see cref="AdminClientClaim"/> when present (TPH on ClientClaims).
+        /// </summary>
+        public static ClientClaimsDto ToClientClaimsDto(ClientClaim source)
+        {
+            if (source == null) return null;
+
+            return new ClientClaimsDto
+            {
+                ClientClaimId = source.Id,
+                Type = source.Type,
+                Value = source.Value,
+                Description = (source as AdminClientClaim)?.Description
+            };
+        }
 
         /// <summary>
         /// Maps a single claim row DTO used by claim CRUD endpoints and preserves the original claim identifier.
+        /// Creates <see cref="AdminClientClaim"/> so the optional Description is persisted (TPH on ClientClaims).
         /// </summary>
-        [MapProperty(nameof(ClientClaimsDto.ClientClaimId), nameof(ClientClaim.Id))]
-        public static partial ClientClaim ToClientClaim(ClientClaimsDto source);
+        public static ClientClaim ToClientClaim(ClientClaimsDto source)
+        {
+            if (source == null) return null;
 
-        public static partial ClientClaimDto ToClientClaimDto(ClientClaim source);
+            return new AdminClientClaim
+            {
+                Id = source.ClientClaimId,
+                Type = source.Type,
+                Value = source.Value,
+                Description = source.Description
+            };
+        }
+
+        public static ClientClaimDto ToClientClaimDto(ClientClaim source)
+        {
+            if (source == null) return null;
+
+            return new ClientClaimDto
+            {
+                Id = source.Id,
+                Type = source.Type,
+                Value = source.Value,
+                Description = (source as AdminClientClaim)?.Description
+            };
+        }
 
         /// <summary>
         /// Maps claims from the full client graph update payload and intentionally ignores identifier to avoid EF tracking conflicts.
+        /// Creates <see cref="AdminClientClaim"/> so the optional Description is persisted (TPH on ClientClaims).
         /// </summary>
-        [MapperIgnoreTarget(nameof(ClientClaim.Id))]
-        public static partial ClientClaim ToClientClaim(ClientClaimDto source);
+        public static ClientClaim ToClientClaim(ClientClaimDto source)
+        {
+            if (source == null) return null;
+
+            return new AdminClientClaim
+            {
+                Type = source.Type,
+                Value = source.Value,
+                Description = source.Description
+            };
+        }
 
         [MapProperty(nameof(ClientProperty.Id), nameof(ClientPropertiesDto.ClientPropertyId))]
         public static partial ClientPropertiesDto ToClientPropertiesDto(ClientProperty source);
