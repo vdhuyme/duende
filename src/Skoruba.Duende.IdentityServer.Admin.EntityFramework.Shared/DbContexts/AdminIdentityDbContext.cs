@@ -36,6 +36,24 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.Shared.DbContexts
             builder.Entity<UserIdentityUserClaim>().ToTable(_schemaConfiguration.IdentityUserClaims);
             builder.Entity<UserIdentityUserToken>().ToTable(_schemaConfiguration.IdentityUserTokens);
             builder.Entity<UserIdentityPasskey>().ToTable(_schemaConfiguration.IdentityUserPasskeys);
+
+            // Unique (UserId, ClaimType, ClaimValue): one identical claim per user.
+            // ClaimType/ClaimValue must be bounded — SQL Server cannot index nvarchar(max),
+            // and UserId (nvarchar(450)) + type/value must stay within the 1700-byte index key limit.
+            builder.Entity<UserIdentityUserClaim>(entity =>
+            {
+                entity.Property(c => c.ClaimType).HasMaxLength(256);
+                entity.Property(c => c.ClaimValue).HasMaxLength(128);
+                entity.HasIndex(c => new { c.UserId, c.ClaimType, c.ClaimValue }).IsUnique();
+            });
+
+            // Unique (RoleId, ClaimType, ClaimValue): one identical claim per role.
+            builder.Entity<UserIdentityRoleClaim>(entity =>
+            {
+                entity.Property(c => c.ClaimType).HasMaxLength(256);
+                entity.Property(c => c.ClaimValue).HasMaxLength(128);
+                entity.HasIndex(c => new { c.RoleId, c.ClaimType, c.ClaimValue }).IsUnique();
+            });
         }
     }
 }

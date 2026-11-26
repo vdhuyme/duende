@@ -141,10 +141,12 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.SqlServer.Migratio
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -155,7 +157,9 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.SqlServer.Migratio
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleId", "ClaimType", "ClaimValue")
+                        .IsUnique()
+                        .HasFilter("[ClaimType] IS NOT NULL AND [ClaimValue] IS NOT NULL");
 
                     b.ToTable("RoleClaims", (string)null);
                 });
@@ -169,10 +173,12 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.SqlServer.Migratio
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -183,7 +189,9 @@ namespace Skoruba.Duende.IdentityServer.Admin.EntityFramework.SqlServer.Migratio
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "ClaimType", "ClaimValue")
+                        .IsUnique()
+                        .HasFilter("[ClaimType] IS NOT NULL AND [ClaimValue] IS NOT NULL");
 
                     b.ToTable("UserClaims", (string)null);
                 });
