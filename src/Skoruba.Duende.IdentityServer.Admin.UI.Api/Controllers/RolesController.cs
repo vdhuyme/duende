@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -187,6 +188,100 @@ namespace Skoruba.Duende.IdentityServer.Admin.UI.Api.Controllers
             await _identityService.DeleteRoleClaimAsync(roleDto);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Upsert roles + claims from identity-data.json (create role if missing,
+        /// insert claim if missing, update Description if Type+Value already exists).
+        /// </summary>
+        [HttpPost("UpsertClaims")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> UpsertClaims([FromBody] RolesClaimsUpsertApiDto request)
+        {
+            var roles = request?.GetRoles();
+            if (roles == null || roles.Count == 0)
+            {
+                return BadRequest("Roles payload is empty.");
+            }
+
+            var existingRoles = await _identityService.GetRolesAsync();
+            var createdRoles = 0;
+            var createdClaims = 0;
+            var updatedClaims = 0;
+
+            foreach (var roleSeed in roles)
+            {
+                if (string.IsNullOrWhiteSpace(roleSeed.Name))
+                {
+                    return BadRequest("Role Name is required.");
+                }
+
+                var role = existingRoles.FirstOrDefault(r => r.Name == roleSeed.Name);
+                if (role == null)
+                {
+                    var (identityResult, roleId) = await _identityService.CreateRoleAsync(new TRoleDto { Name = roleSeed.Name });
+                    role = await _identityService.GetRoleAsync(roleId.ToString());
+                    createdRoles++;
+                }
+
+                // PageBy caps pageSize at 100 — page through all claims so re-push finds existing rows.
+                var existingClaims = new List<TRoleClaimDto>();
+                var page = 1;
+                while (true)
+                {
+                    var roleClaims = await _identityService.GetRoleClaimsAsync(role.Id.ToString(), page, 100);
+                    var batch = roleClaims.Claims ?? new List<TRoleClaimDto>();
+                    existingClaims.AddRange(batch);
+                    if (batch.Count == 0 || existingClaims.Count >= roleClaims.TotalCount)
+                    {
+                        break;
+                    }
+                    page++;
+                }
+
+                foreach (var claimSeed in roleSeed.Claims ?? new List<RoleClaimSeedDto>())
+                {
+                    if (string.IsNullOrWhiteSpace(claimSeed.Type) || string.IsNullOrWhiteSpace(claimSeed.Value))
+                    {
+                        return BadRequest($"Claim Type/Value is required for role '{roleSeed.Name}'.");
+                    }
+
+                    var existing = existingClaims.FirstOrDefault(c =>
+                        c.ClaimType == claimSeed.Type && c.ClaimValue == claimSeed.Value);
+
+                    if (existing == null)
+                    {
+                        await _identityService.CreateRoleClaimsAsync(new TRoleClaimsDto
+                        {
+                            RoleId = role.Id,
+                            ClaimType = claimSeed.Type,
+                            ClaimValue = claimSeed.Value,
+                            Description = claimSeed.Description
+                        });
+                        createdClaims++;
+                    }
+                    else if (!string.Equals(existing.Description, claimSeed.Description, StringComparison.Ordinal))
+                    {
+                        await _identityService.UpdateRoleClaimsAsync(new TRoleClaimsDto
+                        {
+                            ClaimId = existing.ClaimId,
+                            RoleId = role.Id,
+                            ClaimType = existing.ClaimType,
+                            ClaimValue = existing.ClaimValue,
+                            Description = claimSeed.Description
+                        });
+                        updatedClaims++;
+                    }
+                }
+            }
+
+            return Ok(new
+            {
+                createdRoles,
+                createdClaims,
+                updatedClaims
+            });
         }
     }
 }

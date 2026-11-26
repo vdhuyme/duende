@@ -5635,6 +5635,8 @@ export interface IRolesClient {
     postRoleClaims(roleClaims: RoleClaimApiDtoOfString): Promise<RoleClaimApiDto_1>;
 
     putRoleClaims(roleClaims: RoleClaimApiDtoOfString): Promise<void>;
+
+    upsertClaims(request: RolesClaimsUpsertApiDto): Promise<void>;
 }
 
 export class RolesClient extends WebApiClientBase implements IRolesClient {
@@ -6175,6 +6177,57 @@ export class RolesClient extends WebApiClientBase implements IRolesClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    upsertClaims(request: RolesClaimsUpsertApiDto): Promise<void> {
+        let url_ = this.baseUrl + "/api/Roles/UpsertClaims";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processUpsertClaims(_response);
+        });
+    }
+
+    protected processUpsertClaims(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -10931,6 +10984,190 @@ export class TKey implements ITKey {
 }
 
 export interface ITKey {
+}
+
+export class RolesClaimsUpsertApiDto implements IRolesClaimsUpsertApiDto {
+    identityData!: IdentityDataSectionDto | undefined;
+    roles!: RoleClaimsUpsertDto[] | undefined;
+
+    constructor(data?: IRolesClaimsUpsertApiDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.identityData = _data["identityData"] ? IdentityDataSectionDto.fromJS(_data["identityData"]) : undefined as any;
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(RoleClaimsUpsertDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): RolesClaimsUpsertApiDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RolesClaimsUpsertApiDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["identityData"] = this.identityData ? this.identityData.toJSON() : undefined as any;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IRolesClaimsUpsertApiDto {
+    identityData: IdentityDataSectionDto | undefined;
+    roles: RoleClaimsUpsertDto[] | undefined;
+}
+
+export class IdentityDataSectionDto implements IIdentityDataSectionDto {
+    roles!: RoleClaimsUpsertDto[] | undefined;
+
+    constructor(data?: IIdentityDataSectionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(RoleClaimsUpsertDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): IdentityDataSectionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new IdentityDataSectionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IIdentityDataSectionDto {
+    roles: RoleClaimsUpsertDto[] | undefined;
+}
+
+export class RoleClaimsUpsertDto implements IRoleClaimsUpsertDto {
+    name!: string;
+    claims!: RoleClaimSeedDto[] | undefined;
+
+    constructor(data?: IRoleClaimsUpsertDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            if (Array.isArray(_data["claims"])) {
+                this.claims = [] as any;
+                for (let item of _data["claims"])
+                    this.claims!.push(RoleClaimSeedDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): RoleClaimsUpsertDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleClaimsUpsertDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        if (Array.isArray(this.claims)) {
+            data["claims"] = [];
+            for (let item of this.claims)
+                data["claims"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+}
+
+export interface IRoleClaimsUpsertDto {
+    name: string;
+    claims: RoleClaimSeedDto[] | undefined;
+}
+
+export class RoleClaimSeedDto implements IRoleClaimSeedDto {
+    type!: string;
+    value!: string;
+    description!: string | undefined;
+
+    constructor(data?: IRoleClaimSeedDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.value = _data["value"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): RoleClaimSeedDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleClaimSeedDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["value"] = this.value;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IRoleClaimSeedDto {
+    type: string;
+    value: string;
+    description: string | undefined;
 }
 
 export class UserRolesApiDtoOfIdentityRoleDto implements IUserRolesApiDtoOfIdentityRoleDto {

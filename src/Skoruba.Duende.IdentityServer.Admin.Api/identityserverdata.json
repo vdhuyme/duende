@@ -106,6 +106,25 @@
         ],
         "AllowedScopes": ["skoruba_identity_admin_api"],
         "AllowedCorsOrigins": ["https://localhost:44302"]
+      },
+      {
+        "ClientId": "identity_data_pusher",
+        "ClientName": "identity_data_pusher",
+        "AllowedGrantTypes": ["client_credentials"],
+        "RequireClientSecret": true,
+        "ClientSecrets": [
+          {
+            "Value": "identity_data_pusher_secret"
+          }
+        ],
+        "AllowedScopes": ["skoruba_identity_admin_api"],
+        "ClientClaimsPrefix": "",
+        "Claims": [
+          {
+            "Type": "role",
+            "Value": "SkorubaIdentityAdminAdministrator"
+          }
+        ]
       }
     ]
   }
