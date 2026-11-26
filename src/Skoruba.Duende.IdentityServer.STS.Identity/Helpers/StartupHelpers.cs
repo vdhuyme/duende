@@ -493,6 +493,7 @@ namespace Skoruba.Duende.IdentityServer.STS.Identity.Helpers
                 .AddAspNetIdentity<TUserIdentity>()
                 .AddJwtBearerClientAuthentication();
 
+            builder.AddProfileService<ClaimsProfileService>();
             services.ConfigureOptions<OpenIdClaimsMappingConfig>();
 
             if (!identityServerOptions.KeyManagement.Enabled)

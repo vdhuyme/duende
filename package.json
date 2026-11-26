@@ -1,0 +1,18 @@
+{
+  "name": "Duende.IdentityServer.Admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:sts": "dotnet run --project src/Skoruba.Duende.IdentityServer.STS.Identity",
+    "dev:admin-api": "dotnet run --project src/Skoruba.Duende.IdentityServer.Admin.Api",
+    "dev:admin": "dotnet run --project src/Skoruba.Duende.IdentityServer.Admin",
+    "dev": "concurrently -n STS,ADMIN-API,ADMIN -c blue,green,yellow \"pnpm dev:sts\" \"pnpm dev:admin-api\" \"pnpm dev:admin\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^10.0.7"
+  }
+}

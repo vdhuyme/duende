@@ -1,6 +1,6 @@
 {
   "Serilog": {
-    "Using": [ "Serilog.Sinks.Console" ],
+    "Using": ["Serilog.Sinks.Console"],
     "MinimumLevel": {
       "Default": "Debug",
       "Override": {
@@ -27,7 +27,7 @@
         "Name": "RollingFile"
       }
     ],
-    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+    "Enrich": ["FromLogContext", "WithMachineName", "WithThreadId"],
     "Properties": {
       "Product": "Admin",
       "Env": ""
